@@ -4,12 +4,14 @@ public class Arc {
     private String nom;
     private Double metrique;
     private Noeud dest;
+    private Noeud source;
 
 
-    public Arc(String nom, Double metrique, Noeud dest) {
+    public Arc(String nom, Double metrique, Noeud source, Noeud dest) {
         this.nom = nom;
         this.metrique = metrique;
         this.dest = dest;
+        this.source = source;
     }
 
     public String getNom() {
@@ -32,8 +34,16 @@ public class Arc {
         return dest;
     }
 
+    public Noeud getSource(){
+        return source;
+    }
+
     public void setDest(Noeud dest) {
         this.dest = dest;
+    }
+
+    public void setSource(Noeud source){
+        this.source = source;
     }
 
     public String toString(){

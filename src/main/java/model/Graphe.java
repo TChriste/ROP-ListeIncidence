@@ -8,19 +8,19 @@ public class Graphe {
     private HashMap<String,Noeud> listeNoeuds = new HashMap<String, Noeud>();
 
     public Graphe(String nom) {
-        this.nom = nom;
+      this.nom = nom;
     }
 
     public String getNom() {
-        return nom;
+      return nom;
     }
 
     public void setNom(String nom) {
-        this.nom = nom;
+      this.nom = nom;
     }
 
     public HashMap<String, Noeud> getListeNoeuds() {
-        return listeNoeuds;
+      return listeNoeuds;
     }
 
     public void setListeNoeuds(HashMap<String, Noeud> listeNoeuds) {
@@ -44,23 +44,23 @@ public class Graphe {
     }
 
     public void supprimerNoeud(Noeud victim){
-      Noeud tmp_node;
       Arc tmp_a;
 
-      for (Iterator it = this.listeNoeuds.values().iterator(); it.hasNext();){
-        tmp_node = (Noeud) it.next();
-        for(Iterator ita = tmp_node.getListeArcSortants().values().iterator(); ita.hasNext();){
-          tmp_a = (Arc) ita.next();
-          if(tmp_a.getDest().getNom().equals(victim.getNom())){
-            ita.remove();
-          }
-        }
+      for (Iterator it = victim.getListeArcEntrants().values().iterator(); it.hasNext();){
+        tmp_a = (Arc) it.next();
+        tmp_a.getSource().supprimerArc(tmp_a.getNom());
       }
+
+      for (Iterator it = victim.getListeArcSortants().values().iterator(); it.hasNext();){
+        tmp_a = (Arc) it.next();
+        tmp_a.getDest().supprimerArc(tmp_a.getNom());
+      }
+
       this.listeNoeuds.remove(victim.getNom());
     }
 
     Noeud rechercherNoeud(String nom){
-       return listeNoeuds.get(nom);
+      return listeNoeuds.get(nom);
     }
 
     public void ajouterArc(String source, String dest, String nom, Double metrique){
@@ -75,8 +75,8 @@ public class Graphe {
             this.ajouterNoeud(dest);
             destNoeud = this.rechercherNoeud(dest);
         }
-        sourceNoeud.ajouterArcSortant(nom,metrique,destNoeud);
-        //destNoeud.ajouterArcEntrant(...)
+        sourceNoeud.ajouterArcSortant(nom,metrique,sourceNoeud, destNoeud);
+        destNoeud.ajouterArcEntrant(nom,metrique,sourceNoeud, destNoeud);
     }
 
     public void supprimerArc(String nom){
@@ -85,7 +85,7 @@ public class Graphe {
 
     public Arc rechercherArc(String nom){
         for(Noeud noeud : listeNoeuds.values()){
-            Arc searchResult = noeud.rechercherArc(nom);
+            Arc searchResult = noeud.rechercherArcEntrant(nom);
             if(searchResult != null){
                 return searchResult;
             }

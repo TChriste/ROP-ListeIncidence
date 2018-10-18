@@ -10,8 +10,9 @@ public class main {
         graphe.ajouterArc("x1","x2","u1",2.0);
         graphe.ajouterArc("x3","x2","u2",20.0);
         graphe.ajouterArc("x2","x2","u3",1.0);
+        System.out.println(graphe.toString());
 
-        graphe.supprimerNoeud("x2");
+        graphe.supprimerNoeud("x1");
 
 
         System.out.println(graphe.toString());

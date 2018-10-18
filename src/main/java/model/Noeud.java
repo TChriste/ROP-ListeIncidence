@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class Noeud {
     private String nom;
     private HashMap<String,Arc> listeArcSortants = new HashMap<String, Arc>();
+    private HashMap<String,Arc> listeArcEntrants = new HashMap<String, Arc>();
 
     public Noeud(String nom) {
         this.nom = nom;
@@ -22,26 +23,48 @@ public class Noeud {
         return listeArcSortants;
     }
 
+    public HashMap<String, Arc> getListeArcEntrants() {
+        return listeArcEntrants;
+    }
+
     public void setListeArcSortants(HashMap<String, Arc> listeArcSortants) {
         this.listeArcSortants = listeArcSortants;
     }
 
-    void ajouterArcSortant(String nom, Double metrique, Noeud dest){
+    public void setListeArcEntrants(HashMap<String,Arc> listeArcSortants){
+        this.listeArcSortants = listeArcSortants;
+    }
 
-        if(rechercherArc(nom) == null && (nom != null && !nom.equals(""))){
-            Arc arc = new Arc(nom, metrique, dest);
+    void ajouterArcSortant(String nom, Double metrique, Noeud source, Noeud dest){
+
+        if(rechercherArcSortant(nom) == null && (nom != null && !nom.equals(""))){
+            Arc arc = new Arc(nom, metrique, source, dest);
             listeArcSortants.put(nom, arc);
         }else{
             throw new RuntimeException("Un arc existe déjà avec ce nom !");
         }
     }
 
-    Arc rechercherArc(String arc){
+    void ajouterArcEntrant(String nom, Double metrique, Noeud source, Noeud dest){
+        if(rechercherArcEntrant(nom) == null && (nom != null && !nom.equals(""))){
+            Arc arc = new Arc(nom, metrique, source, dest);
+            listeArcEntrants.put(nom, arc);
+        }else{
+            throw new RuntimeException("Un arc existe déjà avec ce nom !");
+        }
+    }
+
+    Arc rechercherArcSortant(String arc){
         return listeArcSortants.get(arc);
+    }
+
+    Arc rechercherArcEntrant(String arc){
+        return listeArcEntrants.get(arc);
     }
 
     void supprimerArc(String arc){
         listeArcSortants.remove(arc);
+        listeArcEntrants.remove(arc);
     }
 
     public String toString(){
