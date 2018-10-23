@@ -51,11 +51,6 @@ public class Graphe {
         tmp_a.getSource().supprimerArc(tmp_a.getNom());
       }
 
-      for (Iterator it = victim.getListeArcSortants().values().iterator(); it.hasNext();){
-        tmp_a = (Arc) it.next();
-        tmp_a.getDest().supprimerArc(tmp_a.getNom());
-      }
-
       this.listeNoeuds.remove(victim.getNom());
     }
 
