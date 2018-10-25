@@ -1,30 +1,35 @@
 package model;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class Graphe {
     private String nom;
     private HashMap<String,Noeud> listeNoeuds = new HashMap<String, Noeud>();
 
     public Graphe(String nom) {
-      this.nom = nom;
+        this.nom = nom;
     }
 
     public String getNom() {
-      return nom;
+        return nom;
     }
 
     public void setNom(String nom) {
-      this.nom = nom;
+        this.nom = nom;
     }
 
     public HashMap<String, Noeud> getListeNoeuds() {
-      return listeNoeuds;
+        return listeNoeuds;
     }
 
     public void setListeNoeuds(HashMap<String, Noeud> listeNoeuds) {
         this.listeNoeuds = listeNoeuds;
+    }
+
+    public void init(){
+        for(Noeud noeud : listeNoeuds.values()){
+            noeud.setMarque(false);
+        }
     }
 
     public void ajouterNoeud(String nom){
@@ -81,6 +86,8 @@ public class Graphe {
 
     public void supprimerArc(String nom){
 
+      // Parcourir tous les arcs
+
     }
 
     public Arc rechercherArc(String nom){
@@ -100,5 +107,48 @@ public class Graphe {
             sb.append("\n");
         }
         return sb.toString();
-    };
+    }
+
+    public List<Noeud> parcourirLargeur(Noeud depart){
+        this.init();
+        LinkedList<Noeud> file = new LinkedList<Noeud>();
+        depart.setMarque(true);
+        List<Noeud> parcourt = new ArrayList<Noeud>();
+        file.addFirst(depart);
+
+        while (!file.isEmpty()){
+            Noeud courant = file.removeLast();
+            parcourt.add(courant);
+            for(Arc arc : courant.getListeArcSortants().values()){
+                Noeud dest = arc.getDest();
+                if(!dest.estMarque()){
+                    dest.setMarque(true);
+                    file.addFirst(dest);
+                }
+            }
+        }
+        return parcourt;
+    }
+
+    public List<Noeud> parcourirProfondeur(Noeud depart){
+        this.init();
+        Stack<Noeud> pile = new Stack<Noeud>();
+        depart.setMarque(true);
+        List<Noeud> parcourt = new ArrayList<Noeud>();
+        pile.push(depart);
+
+        while (!pile.isEmpty()){
+            Noeud courant = pile.pop();
+            parcourt.add(courant);
+            for(Arc arc : courant.getListeArcSortants().values()){
+                Noeud dest = arc.getDest();
+                if(!dest.estMarque()){
+                    dest.setMarque(true);
+                    pile.push(dest);
+                }
+            }
+        }
+        return parcourt;
+    }
+
 }

@@ -6,9 +6,11 @@ public class Noeud {
     private String nom;
     private HashMap<String,Arc> listeArcSortants = new HashMap<String, Arc>();
     private HashMap<String,Arc> listeArcEntrants = new HashMap<String, Arc>();
+    private boolean marque;
 
     public Noeud(String nom) {
         this.nom = nom;
+        this.marque = false;
     }
 
     public String getNom() {
@@ -36,7 +38,6 @@ public class Noeud {
     }
 
     void ajouterArcSortant(String nom, Double metrique, Noeud source, Noeud dest){
-
         if(rechercherArcSortant(nom) == null && (nom != null && !nom.equals(""))){
             Arc arc = new Arc(nom, metrique, source, dest);
             listeArcSortants.put(nom, arc);
@@ -65,6 +66,14 @@ public class Noeud {
     void supprimerArc(String arc){
         listeArcSortants.remove(arc);
         listeArcEntrants.remove(arc);
+    }
+
+    public void setMarque(boolean marque){
+        this.marque = marque;
+    }
+
+    public boolean estMarque(){
+        return this.marque;
     }
 
     public String toString(){
