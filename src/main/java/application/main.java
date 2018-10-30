@@ -22,7 +22,7 @@ public class main {
 
         Noeud depart = graphe.rechercherArc("u1").getSource(); //Source A
 
-        List<Noeud> pLargeur = graphe.parcourirLargeur(depart);
+        List<Noeud> pLargeur = graphe.parcourirLargeur(depart,1);
         System.out.println("-- Parcourt largeur --");
         for(Noeud noeud : pLargeur){
             System.out.println(noeud.getNom());

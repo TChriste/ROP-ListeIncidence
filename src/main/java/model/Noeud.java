@@ -7,6 +7,7 @@ public class Noeud {
     private HashMap<String,Arc> listeArcSortants = new HashMap<String, Arc>();
     private HashMap<String,Arc> listeArcEntrants = new HashMap<String, Arc>();
     private boolean marque;
+    private int niveau;
 
     public Noeud(String nom) {
         this.nom = nom;
@@ -74,6 +75,14 @@ public class Noeud {
 
     public boolean estMarque(){
         return this.marque;
+    }
+
+    public int getNiveau() {
+        return niveau;
+    }
+
+    public void setNiveau(int niveau) {
+        this.niveau = niveau;
     }
 
     public String toString(){

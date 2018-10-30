@@ -29,6 +29,7 @@ public class Graphe {
     public void init(){
         for(Noeud noeud : listeNoeuds.values()){
             noeud.setMarque(false);
+            noeud.setNiveau(0);
         }
     }
 
@@ -109,9 +110,10 @@ public class Graphe {
         return sb.toString();
     }
 
-    public List<Noeud> parcourirLargeur(Noeud depart){
+    public List<Noeud> parcourirLargeur(Noeud depart, int niveauMax){
         this.init();
         LinkedList<Noeud> file = new LinkedList<Noeud>();
+        depart.setNiveau(0);
         depart.setMarque(true);
         List<Noeud> parcourt = new ArrayList<Noeud>();
         file.addFirst(depart);
@@ -123,7 +125,10 @@ public class Graphe {
                 Noeud dest = arc.getDest();
                 if(!dest.estMarque()){
                     dest.setMarque(true);
-                    file.addFirst(dest);
+                    dest.setNiveau(courant.getNiveau()+1);
+                    if(dest.getNiveau() <= niveauMax) {
+                        file.addFirst(dest);
+                    }
                 }
             }
         }
