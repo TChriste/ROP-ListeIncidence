@@ -1,6 +1,8 @@
-package model;
+package model.Arc;
 
-public class Arc {
+import model.Noeuds.Noeud;
+
+public abstract class Arc {
     private String nom;
     private Double metrique;
     private Noeud dest;

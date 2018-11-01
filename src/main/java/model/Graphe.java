@@ -1,10 +1,14 @@
 package model;
 
+import model.Arc.Arc;
+import model.Arc.EArc;
+import model.Noeuds.*;
+
 import java.util.*;
 
 public class Graphe {
     private String nom;
-    private HashMap<String,Noeud> listeNoeuds = new HashMap<String, Noeud>();
+    private HashMap<String, Noeud> listeNoeuds = new HashMap<String, Noeud>();
 
     public Graphe(String nom) {
         this.nom = nom;
@@ -33,9 +37,37 @@ public class Graphe {
         }
     }
 
-    public void ajouterNoeud(String nom){
+    public void ajouterNoeud(ENoeud typeNoeud, String nom){
         if(rechercherNoeud(nom) == null && (nom != null && !nom.equals(""))){
-            Noeud noeud = new Noeud(nom);
+
+            Noeud noeud = null;
+            switch (typeNoeud){
+                case PERSON:
+                    noeud = new Person(nom, "", "", "");
+                    break;
+                case FILM:
+                    noeud = new Film(nom);
+                    break;
+                case ALIMENT:
+                    noeud = new Aliment(nom);
+                    break;
+                case MUSIQUE:
+                     noeud = new Musique(nom);
+                    break;
+                case CONFERENCE:
+                    noeud = new Conference(nom);
+                    break;
+            }
+
+            listeNoeuds.put(nom,noeud);
+        }else{
+            throw new RuntimeException("Impossible d'ajouter le noeud, vérifiez si un noeud n'existe pas déjà avec le même nom ou vérifier les paramètres");
+        }
+    }
+
+    public void ajouterNoeud(ENoeud typeNoeud, String nom, String prenom, String situation, String ville){
+        if(rechercherNoeud(nom) == null && (nom != null && !nom.equals(""))){
+            Noeud noeud = new Person(nom, prenom, situation, ville);
             listeNoeuds.put(nom,noeud);
         }else{
             throw new RuntimeException("Impossible d'ajouter le noeud, vérifiez si un noeud n'existe pas déjà avec le même nom ou vérifier les paramètres");
@@ -65,30 +97,29 @@ public class Graphe {
       this.listeNoeuds.remove(victim.getNom());
     }
 
-    Noeud rechercherNoeud(String nom){
+    public Noeud rechercherNoeud(String nom){
       return listeNoeuds.get(nom);
     }
 
-    public void ajouterArc(String source, String dest, String nom, Double metrique){
+    public void ajouterArc(String source,String dest, EArc arcType, String nom, Double metrique){
         Noeud sourceNoeud = rechercherNoeud(source);
         Noeud destNoeud = rechercherNoeud(dest);
 
-        if(sourceNoeud == null){
-            this.ajouterNoeud(source);
+        /*if(sourceNoeud == null){
+            this.ajouterNoeud(noeudtypeSource, source);
             sourceNoeud = this.rechercherNoeud(source);
         }
         if(destNoeud == null){
-            this.ajouterNoeud(dest);
+            this.ajouterNoeud(noeudtypeDest, dest);
             destNoeud = this.rechercherNoeud(dest);
-        }
-        sourceNoeud.ajouterArcSortant(nom,metrique,sourceNoeud, destNoeud);
-        destNoeud.ajouterArcEntrant(nom,metrique,sourceNoeud, destNoeud);
+        }*/
+
+        sourceNoeud.ajouterArcSortant(arcType,nom,metrique,sourceNoeud, destNoeud);
+        destNoeud.ajouterArcEntrant(arcType, nom,metrique,sourceNoeud, destNoeud);
     }
 
     public void supprimerArc(String nom){
-
       // Parcourir tous les arcs
-
     }
 
     public Arc rechercherArc(String nom){

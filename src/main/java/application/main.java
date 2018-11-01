@@ -1,7 +1,8 @@
 package application;
 
+import model.Arc.EArc;
 import model.Graphe;
-import model.Noeud;
+import model.Noeuds.*;
 
 import java.util.List;
 
@@ -9,20 +10,34 @@ public class main {
     public static void main(String[] args) {
         Graphe graphe = new Graphe("G1");
 
-        graphe.ajouterArc("A","B","u1",1.0);
-        graphe.ajouterArc("A","C","u2",2.0);
-        graphe.ajouterArc("B","C","u3",3.0);
-        graphe.ajouterArc("C","D","u4",4.0);
-        graphe.ajouterArc("B","D","u5",5.0);
-        graphe.ajouterArc("E","D","u6",6.0);
-        graphe.ajouterArc("B","E","u7",7.0);
+
+        graphe.ajouterNoeud(ENoeud.PERSON,"Ludivine", "Dupont", "Marié", "Neuchâtel");
+        graphe.ajouterNoeud(ENoeud.PERSON,"Michel", "Dupond", "Célibataire", "Lausanne");
+        graphe.ajouterNoeud(ENoeud.PERSON,"Marie", "Dubois", "Célibataire", "Berne");
+
+        graphe.ajouterNoeud(ENoeud.MUSIQUE,"Spotify");
+        graphe.ajouterNoeud(ENoeud.FILM,"Netflix");
+        graphe.ajouterNoeud(ENoeud.CONFERENCE,"Facebook Conference");
+        graphe.ajouterNoeud(ENoeud.ALIMENT,"Cookies");
+
+        graphe.ajouterArc("Ludivine", "Marie", EArc.AMITIE, "u1", 1.0);
+        graphe.ajouterArc("Ludivine", "Michel", EArc.AMITIE, "u2", 2.0);
+        graphe.ajouterArc("Ludivine", "Facebook Conference", EArc.REGARDE, "u3", 3.0);
+        graphe.ajouterArc("Ludivine", "Cookies", EArc.CUISINE, "u4", 4.0);
+        graphe.ajouterArc("Ludivine", "Netflix", EArc.REGARDE, "u5", 5.0);
+        graphe.ajouterArc("Ludivine", "Spotify", EArc.REGARDE, "u6", 6.0);
+
+
+        graphe.ajouterArc("Marie", "Spotify", EArc.ECOUTE, "u7", 7.0);
+        graphe.ajouterArc("Marie", "Michel", EArc.AMITIE, "u8", 8.0);
+
 
 
         System.out.println(graphe.toString());
 
         Noeud depart = graphe.rechercherArc("u1").getSource(); //Source A
 
-        List<Noeud> pLargeur = graphe.parcourirLargeur(depart,1);
+        List<Noeud> pLargeur = graphe.parcourirLargeur(depart,2);
         System.out.println("-- Parcourt largeur --");
         for(Noeud noeud : pLargeur){
             System.out.println(noeud.getNom());

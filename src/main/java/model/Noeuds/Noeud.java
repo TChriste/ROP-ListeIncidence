@@ -1,10 +1,12 @@
-package model;
+package model.Noeuds;
+
+import model.Arc.*;
 
 import java.util.HashMap;
 
-public class Noeud {
+public abstract class Noeud {
     private String nom;
-    private HashMap<String,Arc> listeArcSortants = new HashMap<String, Arc>();
+    private HashMap<String, Arc> listeArcSortants = new HashMap<String, Arc>();
     private HashMap<String,Arc> listeArcEntrants = new HashMap<String, Arc>();
     private boolean marque;
     private int niveau;
@@ -38,18 +40,20 @@ public class Noeud {
         this.listeArcSortants = listeArcSortants;
     }
 
-    void ajouterArcSortant(String nom, Double metrique, Noeud source, Noeud dest){
+    public void ajouterArcSortant(EArc typeArc, String nom, Double metrique, Noeud source, Noeud dest){
         if(rechercherArcSortant(nom) == null && (nom != null && !nom.equals(""))){
-            Arc arc = new Arc(nom, metrique, source, dest);
+
+            Arc arc = createArc(typeArc, nom, metrique, source, dest);
             listeArcSortants.put(nom, arc);
         }else{
             throw new RuntimeException("Un arc existe déjà avec ce nom !");
         }
     }
 
-    void ajouterArcEntrant(String nom, Double metrique, Noeud source, Noeud dest){
+
+    public void ajouterArcEntrant(EArc typeArc,String nom, Double metrique, Noeud source, Noeud dest){
         if(rechercherArcEntrant(nom) == null && (nom != null && !nom.equals(""))){
-            Arc arc = new Arc(nom, metrique, source, dest);
+            Arc arc = createArc(typeArc, nom, metrique, source, dest);
             listeArcEntrants.put(nom, arc);
         }else{
             throw new RuntimeException("Un arc existe déjà avec ce nom !");
@@ -60,11 +64,11 @@ public class Noeud {
         return listeArcSortants.get(arc);
     }
 
-    Arc rechercherArcEntrant(String arc){
+    public Arc rechercherArcEntrant(String arc){
         return listeArcEntrants.get(arc);
     }
 
-    void supprimerArc(String arc){
+    public void supprimerArc(String arc){
         listeArcSortants.remove(arc);
         listeArcEntrants.remove(arc);
     }
@@ -100,5 +104,27 @@ public class Noeud {
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    private Arc createArc(EArc typeArc, String nom, Double metrique, Noeud source, Noeud dest) {
+        Arc arc =  null;
+        switch (typeArc){
+            case LIKE:
+                arc = new Like(nom, metrique,source, dest);
+                break;
+            case AMITIE:
+                arc = new Amitie(nom, metrique,source, dest);
+                break;
+            case ECOUTE:
+                arc = new Ecoute(nom, metrique,source, dest);
+                break;
+            case CUISINE:
+                arc = new Cuisine(nom, metrique,source, dest);
+                break;
+            case REGARDE:
+                arc = new Regarde(nom, metrique,source, dest);
+                break;
+        }
+        return arc;
     }
 }
