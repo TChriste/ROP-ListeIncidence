@@ -1,5 +1,6 @@
 package model;
 
+import model.Arc.Amitie;
 import model.Arc.Arc;
 import model.Arc.EArc;
 import model.Noeuds.*;
@@ -105,6 +106,9 @@ public class Graphe {
         Noeud sourceNoeud = rechercherNoeud(source);
         Noeud destNoeud = rechercherNoeud(dest);
 
+
+        // Vérifier le type de la source et la dest de l'arc
+
         /*if(sourceNoeud == null){
             this.ajouterNoeud(noeudtypeSource, source);
             sourceNoeud = this.rechercherNoeud(source);
@@ -141,29 +145,55 @@ public class Graphe {
         return sb.toString();
     }
 
-    public List<Noeud> parcourirLargeur(Noeud depart, int niveauMax){
+    public List<Noeud> parcourirLargeur(Noeud depart, int niveauMax, Class arcType){ // Ajouter le type de l'ARC
         this.init();
         LinkedList<Noeud> file = new LinkedList<Noeud>();
         depart.setNiveau(0);
         depart.setMarque(true);
         List<Noeud> parcourt = new ArrayList<Noeud>();
+
+        //Tester ici le type de Noeud (pas nécessaire si on test la cohérence à la création)
         file.addFirst(depart);
 
         while (!file.isEmpty()){
             Noeud courant = file.removeLast();
             parcourt.add(courant);
             for(Arc arc : courant.getListeArcSortants().values()){
-                Noeud dest = arc.getDest();
-                if(!dest.estMarque()){
-                    dest.setMarque(true);
-                    dest.setNiveau(courant.getNiveau()+1);
-                    if(dest.getNiveau() <= niveauMax) {
-                        file.addFirst(dest);
+                if(arc.getClass() == arcType) {
+                    Noeud dest = arc.getDest();
+                    if (!dest.estMarque()) {
+                        dest.setMarque(true);
+                        dest.setNiveau(courant.getNiveau() + 1);
+                        if (dest.getNiveau() <= niveauMax) {
+                            file.addFirst(dest);
+                        }
                     }
                 }
             }
         }
         return parcourt;
+    }
+
+    public List<Noeud> getAmisHabitantNeuchatelEtRegardandNetflix(Noeud depart){
+        List<Noeud> resultat = new ArrayList<Noeud>();
+        List<Noeud> noeuds = parcourirLargeur(depart, 2, Amitie.class);
+        List<Person> persons = (List<Person>)(List<?>)  noeuds;
+
+        for(Person person : persons){
+            if(person.getVille() == "Neuchâtel" && contient(person.getListeArcSortants(), "Netflix")){
+                resultat.add(person);
+            }
+        }
+        return resultat;
+    }
+
+    private boolean contient(HashMap<String, Arc> arcs, String search){
+        for(Arc arc : arcs.values()){
+            if(arc.getDest().getNom().equals(search)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Noeud> parcourirProfondeur(Noeud depart){
