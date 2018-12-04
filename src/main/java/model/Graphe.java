@@ -6,6 +6,7 @@ import model.Arc.EArc;
 import model.Noeuds.*;
 
 import java.util.*;
+import utils.DijkstraNodeComparator;
 
 public class Graphe {
     private String nom;
@@ -215,6 +216,74 @@ public class Graphe {
             }
         }
         return parcourt;
+    }
+
+    public void dijkstra(Noeud depart){
+        //Initialisation
+        for(Noeud noeud : listeNoeuds.values()){
+            noeud.setDijkstraPoids(Double.MAX_VALUE);
+            noeud.setDijkstraPred(null);
+        }
+        depart.setDijkstraPoids((double) 0);
+
+        List<Noeud> memoire = new ArrayList<Noeud>();
+        memoire.add(depart);
+
+        //Boucle mémoire
+        while (!memoire.isEmpty()){
+            Noeud courant = (Noeud) Collections.min(memoire, new DijkstraNodeComparator());
+            memoire.remove(courant);
+            depart.addItemVpcc(new Triplet(courant.getNom(),courant.getDijkstraPoids(),courant.getDijkstraPred()));
+
+            // Boucle arcs
+            for(Arc arc : courant.getListeArcSortants().values()){
+                Noeud dest = arc.getDest();
+
+                if(dest.getDijkstraPoids() == Double.MAX_VALUE){
+                    memoire.add(dest);
+                }
+                Double poidsCourant = courant.getDijkstraPoids() + arc.getMetrique();
+                if(poidsCourant < dest.getDijkstraPoids()){
+                    dest.setDijkstraPoids(poidsCourant);
+                    dest.setDijkstraPred(courant);
+                }
+            }
+        }
+    }
+
+    public List<Triplet> pcc (String src, String dest){
+        Noeud source = listeNoeuds.get(src);
+
+        if(source.getVpcc().isEmpty()){
+            dijkstra(source);
+        }
+
+        if(source.getVpcc().containsKey(dest)){
+            HashMap<String,Triplet> vpcc = source.getVpcc();
+            List<Triplet> result = new LinkedList<Triplet>();
+            Triplet courant = vpcc.get(dest);
+
+            while (!(courant.getDijkstraPred() == null)){
+                ((LinkedList<Triplet>) result).addFirst(courant);
+                courant = vpcc.get(courant.getDijkstraPred().getNom());
+            }
+            ((LinkedList<Triplet>) result).addFirst(courant);
+
+            return result;
+        }else{
+            throw new RuntimeException("Destination inatteignable");
+        }
+    }
+
+    public String pccAsString(String source, String dest){
+        List<Triplet> pcc = pcc(source,dest);
+
+        StringBuilder str = new StringBuilder();
+        str.append("--- Plus court chemin --");
+        for(Triplet triplet : pcc){
+            str.append(triplet.toString());
+        }
+        return str.toString();
     }
 
 }

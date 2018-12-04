@@ -11,6 +11,10 @@ public abstract class Noeud {
     private boolean marque;
     private int niveau;
 
+    private Double dijkstraPoids;
+    private Noeud dijkstraPred;
+    private HashMap<String,Triplet> vpcc = new HashMap<String, Triplet>();
+
     public Noeud(String nom) {
         this.nom = nom;
         this.marque = false;
@@ -127,4 +131,32 @@ public abstract class Noeud {
         }
         return arc;
     }
+
+    public Double getDijkstraPoids() {
+        return dijkstraPoids;
+    }
+
+    public void setDijkstraPoids(Double dijkstraPoids) {
+        this.dijkstraPoids = dijkstraPoids;
+    }
+
+    public Noeud getDijkstraPred() {
+        return dijkstraPred;
+    }
+
+    public void setDijkstraPred(Noeud dijkstraPred) {
+        this.dijkstraPred = dijkstraPred;
+    }
+
+  public HashMap<String, Triplet> getVpcc() {
+    return vpcc;
+  }
+
+  public void addItemVpcc(Triplet triplet){
+      this.vpcc.put(triplet.getNom(),triplet);
+  }
+
+  public void setVpcc(HashMap<String, Triplet> vpcc) {
+    this.vpcc = vpcc;
+  }
 }
